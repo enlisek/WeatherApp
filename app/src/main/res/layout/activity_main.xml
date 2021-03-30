@@ -17,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#62bedf"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:tabTextColor="#01568c" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
