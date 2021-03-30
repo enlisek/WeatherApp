@@ -47,10 +47,11 @@ class SeniorFragment : Fragment() {
 
         mainViewModel = ViewModelProvider(requireActivity(), ViewModelProvider.AndroidViewModelFactory.getInstance(Application())).get(MainViewModel::class.java)
 
+        //co zrobic, jesli obserwowane dane ulegna zmianie
         val weatherObserver = Observer<Data> {
             newRequest ->
             run {
-                if(newRequest.weather.isNotEmpty())
+                if(newRequest.weather.isNotEmpty()) //jeśli nie bedzie to pusta odpowiedz
                 {
                     val resID = resources.getIdentifier("drawable/a" + newRequest.weather[0].icon, null, context?.packageName)
                     imageViewSenior.setImageResource(resID)
@@ -81,6 +82,7 @@ class SeniorFragment : Fragment() {
             }
         }
 
+        //obserwujemy livedata data z mainviewmodelu
         mainViewModel.data.observe(viewLifecycleOwner,weatherObserver)
 
         mainViewModel.updateData()

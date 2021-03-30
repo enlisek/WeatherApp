@@ -28,6 +28,7 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
         currentCity = "Krowiarki"
         updateData()
     }
+    //pobiera dane z api, wykorzystanie livedata zabezpiecza nas przed opoznieniami
     fun updateData()
     {
         viewModelScope.launch {

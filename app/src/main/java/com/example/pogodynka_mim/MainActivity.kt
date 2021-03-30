@@ -32,16 +32,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mainViewModel: MainViewModel
     lateinit var sharedPref: SharedPreferences
 
+    //zmienna pozwalajaca kontrolować wybrane domyslne miasto
     var isChecked = true
-  //  private var REQUEST_LOCATION_PERMISSION = 2
-//    private lateinit var fusedLocationClient: FusedLocationProviderClient
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
 
+        //przewijanie miedzy widokami
         viewPager = findViewById(R.id.viewPager)
         tabLayout = findViewById(R.id.tab_layout)
 
@@ -56,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         viewPagerAdapter.addFragment(seniorFragment,"Senior")
         viewPager.adapter = viewPagerAdapter
 
+        //sharedPref pozwala na zapisanie wybranego domyślnego miasta, nawet po wyłączeniu aplikacji
         sharedPref = getSharedPreferences("myPref", Context.MODE_PRIVATE)
         if (!(sharedPref.getString("city_name", "").isNullOrEmpty()))
         {
@@ -77,6 +77,7 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
+        //instancja viewmodelu
         mainViewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(Application())).get(MainViewModel::class.java)
         Log.d("KONTROLA","onCreateView")
 
@@ -110,10 +111,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        //po uruchomieniu aplikacji pojawia się domyślnie wybrane miasto, więc ikona domu powinna być "checked"
         val checkable = menu!!.findItem(R.id.checkable_menu)
         checkable.setChecked(isChecked)
         Log.d("KONTROLA","onPrepareOptionsMenu")
 
+        //ustalenie widoku ikony w zależności od jej stanu
         if (isChecked)
             checkable.setIcon(R.drawable.ic_baseline_home_24)
         else
@@ -121,10 +124,13 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    //jesli klikniemy w item menu
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        //jeśli tym itemem będzie nasz domek
         return when (item.getItemId()) {
             R.id.checkable_menu -> {
                 Log.d("KONTROLA","onOptionItemSelected")
+                //zmieniamy stan i ikone
                 isChecked = !isChecked
                 item.setChecked(isChecked)
                 if (isChecked) {
@@ -149,6 +155,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 
+        //tworzy sie menu
         menuInflater.inflate(R.menu.my_menu,menu)
         val menuItem = menu!!.findItem(R.id.app_bar_search)
         val home = menu.findItem(R.id.checkable_menu)
@@ -165,6 +172,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextSubmit(query: String): Boolean {
+                //jesli uzytkownik zatwierdzi wprowadzony tekst, to zmieniamy wartosc currentCity, ikonę i stan domku
                 mainViewModel.currentCity = query
                 isChecked = mainViewModel.currentCity.toLowerCase() == (sharedPref.getString("city_name", "")?:"").toLowerCase()
                 if (isChecked)

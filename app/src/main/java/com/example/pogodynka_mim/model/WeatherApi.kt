@@ -6,6 +6,8 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
+
+//zapytanie na podstawie podanego miasta oraz id klucza
 interface WeatherApi {
     @GET("weather")
     fun getByCityName(@Query("q") city: String, @Query("APPId") key: String ): Call<Data>
